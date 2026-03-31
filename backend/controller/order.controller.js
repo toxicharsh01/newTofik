@@ -11,7 +11,7 @@ const createOrder = async (req, res) => {
   endOfTheDay.setHours(23, 59, 59, 999);
 
   const staticProducts = await Product.find({});
-
+console.log(staticProducts);
   try {
     const { id } = req.params; // customer
     const { items } = req.body;
@@ -32,7 +32,7 @@ const createOrder = async (req, res) => {
 
     const orderItems = items.map((item, index) => {
       return {
-        productId: staticProducts[index].id, //auto
+        productId: staticProducts[index], //auto
         packs: item.packs,
         ratePerPack: customer.fixedRates[0].ratePerPack, //auto
         totalAmount: item.packs * customer.fixedRates[0].ratePerPack, //auto

@@ -6,7 +6,7 @@ import axios from "axios";
 function EditCustomer() {
   const [customer, setCustomer] = useState(null);
   const { id } = useParams();
-  const api = `https://newtofik001.onrender.com/tofik/customers/${id}`;
+  const api = `http://172.20.10.3:8080/tofik/customers/${id}`;
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 

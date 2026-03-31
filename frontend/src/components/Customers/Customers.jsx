@@ -6,7 +6,7 @@ import axios from "axios";
 function Customer() {
   // const { id } = useParams();
   const [customers, setCustomers] = useState([]);
-  const api = "https://newtofik001.onrender.com/tofik/customers";
+  const api = "http://172.20.10.3:8080/tofik/customers";
 
   const getCustomers = async () => {
     try {

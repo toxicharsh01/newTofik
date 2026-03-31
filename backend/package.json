@@ -1,18 +1,23 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "MERN backend",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["mern", "backend", "express", "mongodb"],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "mongoose": "^9.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
