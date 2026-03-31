@@ -9,7 +9,7 @@ function Home({ addOrder }) {
     try {
       const res = await axios.get("https://newtofik001.onrender.com/tofik/orders");
       let data = res.data.data;
-
+console.log(data);
       // Sort so that isCompleted orders go last
       const notCompleted = data.filter((o) => !o.isCompleted);
       const completed = data.filter((o) => o.isCompleted);

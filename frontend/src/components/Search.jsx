@@ -21,16 +21,16 @@ const Search = () => {
     try {
       const res = await axios.get(api); // all customers
       const allCustomers = res.data.data;
-
+        console.log(allCustomers);
       const ordersRes = await axios.get("https://newtofik001.onrender.com/tofik/orders");
       const allOrders = ordersRes.data.data;
 
       // Filter customers who do NOT have an order
       const availableCustomers = allCustomers.filter(
         (c) =>
-          !allOrders.some((o) => o.customerId._id === c._id && o.isOrdered),
+          !allOrders.some((o) => o._id === c._id && o.isOrdered),
       );
-
+  
       setCustomers(availableCustomers);
     } catch (err) {
       console.error(err);
