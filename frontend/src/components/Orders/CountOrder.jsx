@@ -6,7 +6,7 @@ const CountOrder = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const api = `http://172.20.10.3:8080/tofik/orders/count`;
+    const api = `https://newtofik001.onrender.com/tofik/orders/count`;
     const fetchCounts = async () => {
       try {
         const res = await axios.get(api);

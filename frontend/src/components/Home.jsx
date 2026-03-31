@@ -7,7 +7,7 @@ function Home({ addOrder }) {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://172.20.10.3:8080/tofik/orders");
+      const res = await axios.get("https://newtofik001.onrender.com/tofik/orders");
       let data = res.data.data;
 
       // Sort so that isCompleted orders go last
@@ -31,7 +31,7 @@ function Home({ addOrder }) {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://172.20.10.3:8080/tofik/orders/${orderId}`);
+      await axios.delete(`https://newtofik001.onrender.com/tofik/orders/${orderId}`);
       setOrders((prev) => prev.filter((order) => order._id !== orderId));
     } catch (err) {
       console.error(err);
@@ -47,7 +47,7 @@ function Home({ addOrder }) {
 
     try {
       // Update isCompleted on backend
-      await axios.put(`http://172.20.10.3:8080/tofik/orders/${orderId}`, {
+      await axios.put(`https://newtofik001.onrender.com/tofik/orders/${orderId}`, {
         isCompleted: true,
       });
 
