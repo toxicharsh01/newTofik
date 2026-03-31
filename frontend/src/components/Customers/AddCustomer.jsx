@@ -19,7 +19,7 @@ function AddCustomer() {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post("http://172.20.10.3:8080/tofik/customers", data);
+      await axios.post("https://newtofik001.onrender.com/tofik/customers", data);
       toast.success("Customer added successfully!");
       reset();
       setTimeout(() => navigate("/customers"), 1500);

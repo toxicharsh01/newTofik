@@ -15,14 +15,14 @@ const Search = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [customers, setCustomers] = useState([]);
-  const api = "http://172.20.10.3:8080/tofik/customers";
+  const api = "https://newtofik001.onrender.com/tofik/customers";
 
   const getCustomers = async () => {
     try {
       const res = await axios.get(api); // all customers
       const allCustomers = res.data.data;
 
-      const ordersRes = await axios.get("http://172.20.10.3:8080/tofik/orders");
+      const ordersRes = await axios.get("https://newtofik001.onrender.com/tofik/orders");
       const allOrders = ordersRes.data.data;
 
       // Filter customers who do NOT have an order
@@ -65,7 +65,7 @@ const Search = () => {
     //   return;
     // }
 
-    const api = `http://172.20.10.3:8080/tofik/orders/${selectedCustomer._id}`;
+    const api = `https://newtofik001.onrender.com/tofik/${selectedCustomer._id}`;
 
     try {
       const res = await axios.post(api, data);
@@ -74,7 +74,7 @@ const Search = () => {
         toast.error(res.data.message || "Order already exists!");
         return;
       }
-
+      
       toast.success("Order created successfully!");
 
       // ✅ hide customer from list (today)
@@ -104,7 +104,7 @@ const Search = () => {
     if (!query) return;
     try {
       const { data } = await axios.get(
-        `http://172.20.10.3:8080/tofik/search-customers?q=${query}`,
+        `https://newtofik001.onrender.com/tofik/search-customers?q=${query}`,
       );
       setSearches(data.customersList || []);
     } catch (err) {
@@ -115,7 +115,7 @@ const Search = () => {
   const fetchCounts = async () => {
     setLoadingCounts(true);
     try {
-      const res = await axios.get("http://172.20.10.3:8080/tofik/orders/count");
+      const res = await axios.get("https://newtofik001.onrender.com/tofik/count");
       setCounts(res.data.totalsByGrams);
     } catch (err) {
       console.error(err);
@@ -135,7 +135,7 @@ const Search = () => {
   const handleClick = async (id) => {
     try {
       const { data } = await axios.get(
-        `http://172.20.10.3:8080/tofik/customers/${id}`,
+        `https://newtofik001.onrender.com/tofik/customers/${id}`,
       );
       setCustomer(data.data);
       setQuery("");
