@@ -1,26 +1,39 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "MERN backend",
-  "main": "index.js",
-  "type": "commonjs",
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
-  "keywords": ["mern", "backend", "express", "mongodb"],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "mongoose": "^9.3.3"
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.2.8",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
+    "@tailwindcss/vite": "^4.1.17",
+    "axios": "^1.13.2",
+    "react": "^18.2.0", 
+    "react-dom": "^18.2.0", 
+    "react-hook-form": "^7.66.0",
+    "react-router-dom": "^7.9.5",
+    "react-toastify": "^11.0.5",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "engines": {
-    "node": "20.x"
+    "@eslint/js": "^9.36.0",
+    "@types/react": "^18.0.25",  
+    "@types/react-dom": "^18.0.9", 
+    "@vitejs/plugin-react": "^5.0.4",
+    "baseline-browser-mapping": "^2.10.12",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "globals": "^16.4.0",
+    "vite": "^4.0.0" 
   }
 }
