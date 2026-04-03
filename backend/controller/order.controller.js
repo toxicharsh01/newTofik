@@ -11,7 +11,6 @@ const createOrder = async (req, res) => {
   endOfTheDay.setHours(23, 59, 59, 999);
 
   const staticProducts = await Product.find({});
-console.log(staticProducts);
   try {
     const { id } = req.params; // customer
     const { items } = req.body;
@@ -93,7 +92,10 @@ const updateOrder = async (req, res) => {
 
   try {
     const order = await Order.findById(id);
-    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
 
     const customer = await Customer.findById(order.customerId);
     const count = await Count.findOne({ customerId: order.customerId });
@@ -103,7 +105,8 @@ const updateOrder = async (req, res) => {
       items.forEach((item, index) => {
         if (order.items[index]) {
           order.items[index].packs = item.packs;
-          order.items[index].totalAmount = customer.fixedRates[0].ratePerPack * item.packs;
+          order.items[index].totalAmount =
+            customer.fixedRates[0].ratePerPack * item.packs;
         }
       });
 
@@ -193,10 +196,47 @@ const getCount = async (req, res) => {
   return res.status(200).json({ success: true, totalsByGrams });
 };
 
+//get Reports
+const getReports = async (req, res) => {
+  const { q } = req.query;
+
+  const baseDate = q ? new Date(q) : new Date();
+
+  const startOfTheDay = new Date(baseDate);
+  startOfTheDay.setHours(0, 0, 0, 0);
+
+  const endOfTheDay = new Date(baseDate);
+  endOfTheDay.setHours(23, 59, 59, 999);
+
+  const data = await Order.find({
+    orderDate: {
+      $gte: startOfTheDay,
+      $lte: endOfTheDay,
+    },
+  })
+    .select("items.packs items.totalAmount customerId")
+    .populate({
+      path: "customerId",
+      select: "name",
+    })
+    .populate({
+      path: "items.productId",
+      select: "name",
+    });
+
+  // .populate({
+  //   path: "items.productId",
+  //   model: "Product",
+  // });
+
+  res.json(data);
+};
+
 module.exports = {
   getTodaysOrders,
   createOrder,
   updateOrder,
   deleteOrder,
   getCount,
+  getReports,
 };
