@@ -1,36 +1,36 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import CountOrder from "../components/Orders/CountOrder";
+import { NavLink } from "react-router-dom";
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_LOCAL_API;
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const [searches, setSearches] = useState([]);
-  const [customer, setCustomer] = useState(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [counts, setCounts] = useState(null);
   const [loadingCounts, setLoadingCounts] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [customers, setCustomers] = useState([]);
-  const api = "https://newtofik001.onrender.com/tofik/customers";
+  const api = `${BASE_URL}/tofik/customers`;
 
   const getCustomers = async () => {
     try {
       const res = await axios.get(api); // all customers
       const allCustomers = res.data.data;
-        console.log(allCustomers);
-      const ordersRes = await axios.get("https://newtofik001.onrender.com/tofik/orders");
+      const ordersRes = await axios.get(`${BASE_URL}/tofik/orders`);
       const allOrders = ordersRes.data.data;
 
       // Filter customers who do NOT have an order
       const availableCustomers = allCustomers.filter(
         (c) =>
-          !allOrders.some((o) => o._id === c._id && o.isOrdered),
+          !allOrders.some((o) => o.customerId._id === c._id && o.isOrdered),
       );
-  
+
       setCustomers(availableCustomers);
     } catch (err) {
       console.error(err);
@@ -65,7 +65,7 @@ const Search = () => {
     //   return;
     // }
 
-    const api = `https://newtofik001.onrender.com/tofik/orders/${selectedCustomer._id}`;
+    const api = `${BASE_URL}/tofik/orders/${selectedCustomer._id}`;
 
     try {
       const res = await axios.post(api, data);
@@ -104,7 +104,7 @@ const Search = () => {
     if (!query) return;
     try {
       const { data } = await axios.get(
-        `https://newtofik001.onrender.com/tofik/search-customers?q=${query}`,
+        `${BASE_URL}/tofik/search-customers?q=${query}`,
       );
       setSearches(data.customersList || []);
     } catch (err) {
@@ -115,7 +115,7 @@ const Search = () => {
   const fetchCounts = async () => {
     setLoadingCounts(true);
     try {
-      const res = await axios.get("https://newtofik001.onrender.com/tofik/orders/count");
+      const res = await axios.get(`${BASE_URL}/tofik/orders/count`);
       setCounts(res.data.totalsByGrams);
     } catch (err) {
       console.error(err);
@@ -131,27 +131,6 @@ const Search = () => {
   useEffect(() => {
     fetchCounts();
   }, []);
-
-  const handleClick = async (id) => {
-    try {
-      const { data } = await axios.get(
-        `https://newtofik001.onrender.com/tofik/customers/${id}`,
-      );
-      setCustomer(data.data);
-      setQuery("");
-      setSearches([]);
-      setActiveIndex(-1);
-
-      // Reset quantities
-      setValue("items.0.packs", null);
-      setValue("items.1.packs", null);
-
-      // Focus Mint input
-      setFocus("items.0.packs");
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   // Click outside to close dropdown
   useEffect(() => {
@@ -201,31 +180,43 @@ const Search = () => {
         )}
       </div>
 
-      {/* CUSTOMER LIST */}
-      <div className="w-full max-w-[360px] mt-3 space-y-2">
-        {[...customers]
-          .sort((a, b) => a.name.localeCompare(b.name)) // A → Z
-          .map((c) => (
-            <div
-              key={c._id}
-              onClick={() => setSelectedCustomer(c)} // click on name opens popup
-              className="flex justify-between items-center bg-white border rounded-lg px-3 py-2 shadow-sm active:scale-[0.98] transition cursor-pointer"
-            >
-              <span className="text-sm font-medium">{c.name}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent row click double-trigger
-                  setSelectedCustomer(c); // open order popup
-                  window.location.href = `tel:${c.phone}`; // trigger phone call
-                }}
-                className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition"
-              >
-                {c.phone}
-              </button>
-            </div>
-          ))}
-      </div>
+<div className="w-full max-w-[360px] flex justify-center mt-2">
+  <NavLink
+    to="/reports"
+    className={({ isActive }) =>
+      `px-3 py-1 text-xs sm:text-sm rounded font-medium transition-colors duration-150 ${
+        isActive
+          ? "bg-indigo-600 text-white"
+          : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+      }`
+    }
+  >
+    Reports
+  </NavLink>
+</div>
 
+      {/* CUSTOMER LIST */}
+    <div className="w-full max-w-[360px] mt-3 space-y-2 h-90 overflow-y-auto">
+  {[...customers].map((c) => (
+    <div
+      key={c._id}
+      onClick={() => setSelectedCustomer(c)} // click on name opens popup
+      className="flex justify-between items-center bg-white border rounded-lg px-3 py-2 shadow-sm active:scale-[0.98] transition cursor-pointer"
+    >
+      <span className="text-sm font-medium">{c.name}</span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation(); // prevent row click double-trigger
+          setSelectedCustomer(c); // open order popup
+          window.location.href = `tel:${c.phone}`; // trigger phone call
+        }}
+        className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition"
+      >
+        {c.phone}
+      </button>
+    </div>
+  ))}
+</div>
       {/* POPUP */}
       {selectedCustomer && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-3">
@@ -289,7 +280,7 @@ const Search = () => {
         </div>
       )}
 
-      <ToastContainer position="top-left" />
+      <ToastContainer position="top-left" autoClose={700} />
     </div>
   );
 };

@@ -1,11 +1,13 @@
 import React from "react";
 
 import Search from "../Search";
+import { Outlet } from "react-router-dom";
 
 function Order() {
   return (
     <>
       <div className=" w-[50h-screen">
+        <Outlet/>
         <Search />
       </div>
 

@@ -5,21 +5,30 @@ import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_LOCAL_API;
+
 function AddCustomer() {
-  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
 
   // Capitalize each word in name
   const capitalizeName = (value) => {
     return value
       .split(" ")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
   const onSubmit = async (data) => {
     try {
-      await axios.post("https://newtofik001.onrender.com/tofik/customers", data);
+      await axios.post(`${BASE_URL}/tofik/customers`, data);
       toast.success("Customer added successfully!");
       reset();
       setTimeout(() => navigate("/customers"), 1500);
@@ -38,10 +47,11 @@ function AddCustomer() {
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
         {/* Name */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Name</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Name
+          </label>
           <input
             type="text"
             {...register("name", { required: "Name is required" })}
@@ -52,12 +62,16 @@ function AddCustomer() {
               setValue("name", formatted);
             }}
           />
-          {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+          )}
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Phone
+          </label>
           <input
             type="text"
             inputMode="numeric"
@@ -65,18 +79,22 @@ function AddCustomer() {
               required: "Phone number required",
               pattern: {
                 value: /^[0-9]{10}$/,
-                message: "Enter a valid 10-digit phone number"
-              }
+                message: "Enter a valid 10-digit phone number",
+              },
             })}
             className={`w-full border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none ${errors.phone ? "border-red-500" : "border-gray-300"}`}
             placeholder="Enter phone number"
           />
-          {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+          {errors.phone && (
+            <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+          )}
         </div>
 
         {/* Address */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Address</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Address
+          </label>
           <textarea
             {...register("address")}
             className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -87,40 +105,47 @@ function AddCustomer() {
         {/* Fixed Rates */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Grams per Pack</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Grams per Pack
+            </label>
             <input
               type="text"
               inputMode="numeric"
               {...register("fixedRates[0].gramsPerPack", {
                 required: "Grams per pack required",
-                pattern: { value: /^[0-9]+$/, message: "Enter a valid number" }
+                pattern: { value: /^[0-9]+$/, message: "Enter a valid number" },
               })}
               className={`w-full border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none ${errors.fixedRates?.[0]?.gramsPerPack ? "border-red-500" : "border-gray-300"}`}
               placeholder="e.g. 50"
             />
             {errors.fixedRates?.[0]?.gramsPerPack && (
-              <p className="text-red-500 text-xs mt-1">{errors.fixedRates[0].gramsPerPack.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.fixedRates[0].gramsPerPack.message}
+              </p>
             )}
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Rate per Pack</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Rate per Pack
+            </label>
             <input
               type="text"
               inputMode="numeric"
               {...register("fixedRates[0].ratePerPack", {
                 required: "Rate per pack required",
-                pattern: { value: /^[0-9]+$/, message: "Enter a valid number" }
+                pattern: { value: /^[0-9]+$/, message: "Enter a valid number" },
               })}
               className={`w-full border rounded-md p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none ${errors.fixedRates?.[0]?.ratePerPack ? "border-red-500" : "border-gray-300"}`}
               placeholder="e.g. 10"
             />
             {errors.fixedRates?.[0]?.ratePerPack && (
-              <p className="text-red-500 text-xs mt-1">{errors.fixedRates[0].ratePerPack.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.fixedRates[0].ratePerPack.message}
+              </p>
             )}
           </div>
         </div>
 
-        
         {/* Buttons */}
         <div className="flex justify-between pt-4">
           <button
@@ -139,7 +164,7 @@ function AddCustomer() {
         </div>
       </form>
 
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
+      <ToastContainer position="top-right" autoClose={1000} hideProgressBar />
     </div>
   );
 }

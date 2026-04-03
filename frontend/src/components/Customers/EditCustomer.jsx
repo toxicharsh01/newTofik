@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+ const BASE_URL = import.meta.env.VITE_LOCAL_API;
 
 function EditCustomer() {
   const [customer, setCustomer] = useState(null);
   const { id } = useParams();
-  const api = `http://172.20.10.3:8080/tofik/customers/${id}`;
+
+  const api = `${BASE_URL}/tofik/customers/${id}`;
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
@@ -24,21 +28,21 @@ function EditCustomer() {
     try {
       await axios.put(api, data);
       navigate(-1);
-      alert("Customer updated successfully!");
+      toast.success("Customer updated successfully!");
     } catch (error) {
       console.error("Error updating customer: ", error);
-      alert("Something went wrong!");
+      toast.error("Something went wrong!");
     }
   };
 
-  const deleteHandler = async () => {
-    try {
-      await axios.delete(api);
-      navigate("/customers");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const deleteHandler = async () => {
+  //   try {
+  //     await axios.delete(api);
+  //     navigate("/customers");
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     getCustomer();
@@ -126,7 +130,7 @@ function EditCustomer() {
             Cancel
           </NavLink>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => {
               if (
@@ -138,7 +142,7 @@ function EditCustomer() {
             className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm font-medium"
           >
             Delete
-          </button>
+          </button> */}
 
           <button
             type="submit"
