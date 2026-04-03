@@ -198,7 +198,7 @@ const getCount = async (req, res) => {
 
 //get Reports
 const getReports = async (req, res) => {
-  const { q } = req.query;
+  const { q, name } = req.query;
 
   const baseDate = q ? new Date(q) : new Date();
 
@@ -208,28 +208,32 @@ const getReports = async (req, res) => {
   const endOfTheDay = new Date(baseDate);
   endOfTheDay.setHours(23, 59, 59, 999);
 
-  const data = await Order.find({
+  // Base filter (date)
+  let filter = {
     orderDate: {
       $gte: startOfTheDay,
       $lte: endOfTheDay,
     },
-  })
+  };
+
+  const data = await Order.find(filter)
     .select("items.packs items.totalAmount customerId")
     .populate({
       path: "customerId",
       select: "name",
+      match: name
+        ? { name: { $regex: name, $options: "i" } }
+        : {},
     })
     .populate({
       path: "items.productId",
       select: "name",
     });
 
-  // .populate({
-  //   path: "items.productId",
-  //   model: "Product",
-  // });
+  // ⚠️ Important: populate match ke baad null remove karna padega
+  const filteredData = data.filter((order) => order.customerId !== null);
 
-  res.json(data);
+  res.json(filteredData);
 };
 
 module.exports = {
