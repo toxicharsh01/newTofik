@@ -9,13 +9,19 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["mern", "backend", "express", "mongodb"],
+  "keywords": [
+    "mern",
+    "backend",
+    "express",
+    "mongodb"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mongoose": "^9.3.3"
+    "mongoose": "^9.3.3",
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

@@ -43,63 +43,63 @@ const Search = () => {
   }, []);
 
   const { register, handleSubmit, reset, setValue, setFocus } = useForm({
-    defaultValues: {
-      items: [
-        { packs: 0 }, // Mint
-        { packs: 0 }, // Noraml
-      ],
-    },
   });
   const searchRef = useRef(null);
 
   const addOrder = async (data, selectedCustomer) => {
-    if (!selectedCustomer) {
-      toast.error("Please select a customer!");
+  if (!selectedCustomer) {
+    toast.error("Please select a customer!");
+    return;
+  }
+
+  // ✅ Ensure packs are numbers, empty or invalid => 0
+  if (data.items && Array.isArray(data.items)) {
+    data.items = data.items.map((item) => ({
+      ...item,
+      packs: Number(item.packs) || 0, // NaN, undefined, empty string -> 0
+    }));
+  }
+
+  // Optional: check if all packs are 0
+  if (data.items.every((item) => item.packs <= 0)) {
+    toast.error("Please enter at least one quantity!");
+    return;
+  }
+
+  const api = `${BASE_URL}/tofik/orders/${selectedCustomer._id}`;
+
+  try {
+    const res = await axios.post(api, data);
+
+    if (res.data.success === false) {
+      toast.error(res.data.message || "Order already exists!");
       return;
     }
 
-    // if (
-    //   (data.items?.[0]?.packs || 0) <= 0 &&
-    //   (data.items?.[1]?.packs || 0) <= 0
-    // ) {
-    //   toast.error("Please enter at least one quantity!");
-    //   return;
-    // }
+    toast.success("Order created successfully!");
 
-    const api = `${BASE_URL}/tofik/orders/${selectedCustomer._id}`;
+    // ✅ hide customer from list (today)
+    setCustomers((prev) =>
+      prev.filter((c) => c._id !== selectedCustomer._id),
+    );
 
-    try {
-      const res = await axios.post(api, data);
+    // ✅ reset form + close popup
+    reset();
+    setSelectedCustomer(null);
 
-      if (res.data.success === false) {
-        toast.error(res.data.message || "Order already exists!");
-        return;
-      }
+    // optional
+    fetchCounts();
+  } catch (err) {
+    console.error(err);
 
-      toast.success("Order created successfully!");
+    toast.error(
+      err.response?.data?.message ||
+        "Something went wrong while adding order!",
+    );
 
-      // ✅ hide customer from list (today)
-      setCustomers((prev) =>
-        prev.filter((c) => c._id !== selectedCustomer._id),
-      );
-
-      // ✅ reset form + close popup
-      reset();
-      setSelectedCustomer(null);
-
-      // optional
-      fetchCounts();
-    } catch (err) {
-      console.error(err);
-
-      toast.error(
-        err.response?.data?.message ||
-          "Something went wrong while adding order!",
-      );
-
-      setSelectedCustomer(null);
-    }
-  };
+    setSelectedCustomer(null);
+  }
+};
   // Fetch customers
   const GetSearches = async () => {
     if (!query) return;
@@ -264,39 +264,38 @@ const Search = () => {
 
             {/* Form */}
             <form
-              onSubmit={handleSubmit((data) =>
-                addOrder(data, selectedCustomer),
-              )}
-              className="flex flex-col sm:flex-row sm:items-center gap-3"
-            >
-              <label className="text-xs sm:text-sm font-medium text-gray-600">
-                Mint
-              </label>
-              <input
-                {...register("items.0.packs", { valueAsNumber: true })}
-                type="number"
-                min="0"
-                placeholder="Mint"
-                className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
-              />
-              <label className="text-xs sm:text-sm font-medium text-gray-600">
-                Normal
-              </label>
-              <input
-                {...register("items.1.packs", { valueAsNumber: true })}
-                type="number"
-                min="0"
-                placeholder="Normal"
-                className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
-              />
+  onSubmit={handleSubmit((data) => addOrder(data, selectedCustomer))}
+  className="flex flex-col sm:flex-row sm:items-center gap-3"
+>
+  <label className="text-xs sm:text-sm font-medium text-gray-600">
+    Thandai
+  </label>
+  <input
+    {...register("items.0.packs", { valueAsNumber: true })}
+    type="number"
+    placeholder="Enter Quantity"
+    className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
+    defaultValue="" // input empty initially
+  />
 
-              <button
-                type="submit"
-                className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm font-medium"
-              >
-                Add Order
-              </button>
-            </form>
+  <label className="text-xs sm:text-sm font-medium text-gray-600">
+    Sada
+  </label>
+  <input
+    {...register("items.1.packs", { valueAsNumber: true })}
+    type="number"
+    placeholder="Enter Quantity"
+    className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
+    defaultValue="" // input empty initially
+  />
+
+  <button
+    type="submit"
+    className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm font-medium"
+  >
+    Add Order
+  </button>
+</form>
           </div>
         </div>
       )}

@@ -50,10 +50,10 @@ const CountOrder = () => {
               {gram}g Packs
             </h3>
             <p className="text-gray-700 text-center text-sm sm:text-base font-semibold">
-              Mint: {counts[gram].mintPacks}
+              Thandai: {counts[gram].mintPacks}
             </p>
             <p className="text-gray-700 text-center text-sm sm:text-base font-semibold">
-              Normal: {counts[gram].normalPacks}
+              Sada: {counts[gram].normalPacks}
             </p>
             <p className="text-indigo-600 font-bold text-center text-sm sm:text-base mt-1 sm:mt-2">
               Total: {total}
