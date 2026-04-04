@@ -7,7 +7,6 @@ function Order() {
   return (
     <>
       <div className=" w-[50h-screen">
-        <Outlet/>
         <Search />
       </div>
 

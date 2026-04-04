@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const VITE_LOCAL_API= "https://newtofik001.onrender.com"
 
 const CountOrder = () => {
   const [counts, setCounts] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const api = `https://newtofik001.onrender.com/tofik/orders/count`;
+    const api = `${VITE_LOCAL_API}/tofik/orders/count`;
     const fetchCounts = async () => {
       try {
         const res = await axios.get(api);

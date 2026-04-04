@@ -13,6 +13,7 @@ const Search = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [counts, setCounts] = useState(null);
   const [loadingCounts, setLoadingCounts] = useState(true);
+  const [loadingCustomers, setloadingCustomers] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   const [customers, setCustomers] = useState([]);
@@ -162,22 +163,38 @@ const Search = () => {
           }}
         />
 
-        {searches?.length > 0 && (
-          <div className="absolute top-full left-0 right-0 z-50 max-h-[40vh] overflow-y-auto bg-white shadow-lg border rounded-md mt-1">
-            {searches.map((item, index) => (
-              <div
-                key={item._id}
-                onClick={() => setSelectedCustomer(item)}
-                className={`px-3 py-2 flex justify-between cursor-pointer border-b hover:bg-indigo-100 ${
-                  activeIndex === index ? "bg-indigo-200" : ""
-                }`}
-              >
-                <span className="text-sm">{item.name}</span>
-                <span className="text-xs text-gray-500">{item.phone}</span>
-              </div>
-            ))}
-          </div>
-        )}
+       {query.length > 0 && (
+  <div className="absolute top-full left-0 right-0 z-50 max-h-[40vh] overflow-y-auto mt-1 space-y-1 bg-gray-50 border border-gray-200 rounded-lg shadow-md p-1">
+    {loadingCustomers ? (
+      <div className="text-center text-gray-600 py-2 text-sm bg-gray-100 rounded-md">
+        Loading customers...
+      </div>
+    ) : searches?.length > 0 ? (
+      searches.map((item, index) => (
+        <div
+          key={item._id}
+          onClick={() => setSelectedCustomer(item)}
+          className="flex justify-between items-center bg-white px-3 py-2 rounded-md shadow-sm cursor-pointer hover:bg-indigo-50 transition"
+        >
+          <span className="text-sm font-medium truncate">{item.name}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // prevent row click
+              window.location.href = `tel:${item.phone}`;
+            }}
+            className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition"
+          >
+            {item.phone}
+          </button>
+        </div>
+      ))
+    ) : (
+      <div className="text-center text-gray-500 py-2 text-sm bg-gray-100 rounded-md">
+        No customers found
+      </div>
+    )}
+  </div>
+)}
       </div>
 
 <div className="w-full max-w-[360px] flex justify-center mt-2">
@@ -218,60 +235,60 @@ const Search = () => {
   ))}
 </div>
       {/* POPUP */}
-      {selectedCustomer && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-3">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-5 animate-slideIn">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-indigo-700 truncate">
-                {selectedCustomer.name}
-              </h2>
-              <button
-                onClick={() => setSelectedCustomer(null)}
-                className="text-gray-400 hover:text-gray-600 transition text-xl"
-              >
-                ✖
-              </button>
-            </div>
+     {selectedCustomer && (
+  <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 px-3 pt-20 sm:pt-32 overflow-auto">
+    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-5 animate-slideIn">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-indigo-700 truncate">
+          {selectedCustomer.name}
+        </h2>
+        <button
+          onClick={() => setSelectedCustomer(null)}
+          className="text-gray-400 hover:text-gray-600 transition text-xl"
+        >
+          ✖
+        </button>
+      </div>
 
-            {/* Form */}
-            <form
-              onSubmit={handleSubmit((data) =>
-                addOrder(data, selectedCustomer),
-              )}
-              className="flex flex-col sm:flex-row sm:items-center gap-3"
-            >
-              <label className="text-xs sm:text-sm font-medium text-gray-600">
-                Mint
-              </label>
-              <input
-                {...register("items.0.packs", { valueAsNumber: true })}
-                type="number"
-                min="0"
-                placeholder="Mint"
-                className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
-              />
-              <label className="text-xs sm:text-sm font-medium text-gray-600">
-                Normal
-              </label>
-              <input
-                {...register("items.1.packs", { valueAsNumber: true })}
-                type="number"
-                min="0"
-                placeholder="Normal"
-                className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
-              />
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit((data) =>
+          addOrder(data, selectedCustomer)
+        )}
+        className="flex flex-col sm:flex-row sm:items-center gap-3"
+      >
+        <label className="text-xs sm:text-sm font-medium text-gray-600">
+          Mint
+        </label>
+        <input
+          {...register("items.0.packs", { valueAsNumber: true })}
+          type="number"
+          min="0"
+          placeholder="Mint"
+          className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
+        />
+        <label className="text-xs sm:text-sm font-medium text-gray-600">
+          Normal
+        </label>
+        <input
+          {...register("items.1.packs", { valueAsNumber: true })}
+          type="number"
+          min="0"
+          placeholder="Normal"
+          className="flex-1 border border-gray-300 rounded-md p-2 text-sm text-center focus:ring-1 focus:ring-indigo-500 outline-none"
+        />
 
-              <button
-                type="submit"
-                className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm font-medium"
-              >
-                Add Order
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+        <button
+          type="submit"
+          className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm font-medium"
+        >
+          Add Order
+        </button>
+      </form>
+    </div>
+  </div>
+)}
 
       {/* COUNT */}
       {!loadingCounts && counts && Object.keys(counts).length > 0 && (

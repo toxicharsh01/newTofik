@@ -22,7 +22,7 @@ const addNewCustomer = async (req, res) => {
       ],
     });
     res.status(201).json({ success: true, cusotmer: newCustomer });
-    console.log("new Customer saved");
+    // console.log("new Customer saved");
   } catch (error) {
     res.status(500).json({ success: false, message: "Error adding customer" });
     console.log(error);
@@ -33,9 +33,9 @@ const addNewCustomer = async (req, res) => {
 
 const searchCustomers = async (req, res) => {
   const { q } = req.query;
-  console.log(q);
 
   if (!q) {
+    
     return res.json({ results: [] });
   }
 
@@ -46,7 +46,7 @@ const searchCustomers = async (req, res) => {
     .select("name phone")
     .limit(10);
   res.json({ customersList: matchingCustomers });
-  console.log(matchingCustomers);
+  // console.log(matchingCustomers);
 };
 
 //READ
@@ -62,7 +62,6 @@ const getCustomers = async (req, res) => {
 
 const getCustomer = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   try {
     const customer = await Customer.findById(id).select(
       "name phone address currentBalance fixedRates.gramsPerPack fixedRates.ratePerPack",

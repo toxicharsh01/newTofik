@@ -11,19 +11,6 @@ const createProduct = async (req, res) => {
 };
 
 
-const createProds = async () => {
-  const name1 = "Mint";
-  const name2 = "Normal";
-
-  const p = new Product({
-    name1,
-    name2
-  });
-  const saved =await p.save();
-  console.log(saved);
-}
-
-createProds();
 
 const getAllProducsts = async (req, res) => {
   const allProducts = await Product.find({});
