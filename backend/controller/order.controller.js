@@ -55,7 +55,7 @@ const createOrder = async (req, res) => {
     await newOrder.save();
 
     res.status(200).json({ success: true, order: newOrder });
-    console.log("new Order saved");
+    // console.log("new Order saved");
   } catch (error) {
     console.error("Error creating order:", error);
     res.status(500).json({ message: "Server error", error });
