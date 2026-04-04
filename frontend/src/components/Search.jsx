@@ -42,8 +42,7 @@ const Search = () => {
     getCustomers();
   }, []);
 
-  const { register, handleSubmit, reset, setValue, setFocus } = useForm({
-  });
+  const { register, handleSubmit, reset, setValue, setFocus } = useForm();
   const searchRef = useRef(null);
 
   const addOrder = async (data, selectedCustomer) => {
