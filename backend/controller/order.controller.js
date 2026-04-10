@@ -45,7 +45,7 @@ const createOrder = async (req, res) => {
 
     //Today TS count
     const count = new Count({
-      customerId: customer._id,
+      orderId: newOrder._id,
       grams: customer.fixedRates[0].gramsPerPack,
       mintPacks: items[0].packs,
       normalPacks: items[1].packs,
@@ -79,9 +79,9 @@ const getTodaysOrders = async (req, res) => {
         model: "Product",
       });
 
-    res.status(200).json({ success: true, data: allOrders });
+return    res.status(200).json({ success: true, data: allOrders });
   } catch (error) {
-    res.status(500).json({ success: false, message: "error getting orders" });
+    return res.status(500).json({ success: false, message: "error getting orders" });
   }
 };
 
@@ -156,7 +156,7 @@ const deleteOrder = async (req, res) => {
 
     // Delete Related Count from record  (customer's ID)
     const countDeleted = await Count.findOneAndDelete({
-      customerId: customer._id,
+      orderId: order._id.toString(),
     });
 
     // send Response

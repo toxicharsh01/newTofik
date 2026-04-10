@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const countSchema = new Schema({
-    customerId: {
+    orderId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer"
+        ref: "Order",
+        required: true,
     },
     grams: Number,
     mintPacks : Number,
